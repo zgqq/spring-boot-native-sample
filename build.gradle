@@ -20,7 +20,7 @@ repositories {
 	maven { url 'https://repo.spring.io/milestone' }
 }
 
-apply plugin: 'java-library'
+// apply plugin: 'java-library'
 dependencies {
 
 // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
@@ -32,7 +32,7 @@ dependencies {
 	// annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-         api "org.springframework.boot:spring-boot-starter-data-redis"
+        implementation "org.springframework.boot:spring-boot-starter-data-redis"
 
         compileOnly 'org.projectlombok:lombok:1.18.24'
         annotationProcessor 'org.projectlombok:lombok:1.18.24'
@@ -83,6 +83,7 @@ graalvmNative {
 tasks.named('bootBuildImage') {
 	buildpacks =  ['gcr.io/paketo-buildpacks/bellsoft-liberica:9.9.0-ea', 'gcr.io/paketo-buildpacks/java-native-image']
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()

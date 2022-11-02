@@ -1,9 +1,29 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url 'https://repo.spring.io/plugins-release-local' }
+        maven { url 'https://repo.spring.io/milestone' }
+        maven { url 'https://repo.spring.io/snapshot' }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:3.0.0-RC1" //
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.0"
+//        classpath "org.graalvm.plugin:gradle-graal-truffle-plugins:0.9.16"
+    }
+}
+
 plugins {
-	id 'org.springframework.boot' version '3.0.0-RC1'
-	id 'io.spring.dependency-management' version '1.1.0'
+	// id 'org.springframework.boot' version '3.0.0-RC1'
+	// id 'io.spring.dependency-management' version '1.1.0'
 	id 'org.graalvm.buildtools.native' version '0.9.16'
 	id 'java'
 }
+
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
@@ -20,71 +40,86 @@ repositories {
 	maven { url 'https://repo.spring.io/milestone' }
 }
 
-// apply plugin: 'java-library'
-dependencies {
 
-// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
-        // runtimeOnly 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3'
-// https://mvnrepository.com/artifact/com.rometools/rome
-        // implementation 'com.rometools:rome:1.18.0'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// compileOnly 'org.projectlombok:lombok'
-	// annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+subprojects { t ->
+	repositories {
+		mavenCentral()
+		maven { url 'https://repo.spring.io/milestone' }
+	}
 
-        implementation "org.springframework.boot:spring-boot-starter-data-redis"
+        apply plugin: 'io.spring.dependency-management'
+        apply plugin: 'org.springframework.boot'
+	apply plugin: 'java'
+	// apply plugin: 'java-library'
+	dependencies {
 
-        compileOnly 'org.projectlombok:lombok:1.18.24'
-        annotationProcessor 'org.projectlombok:lombok:1.18.24'
-        testCompileOnly 'org.projectlombok:lombok:1.18.24'
-        testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
-}
+	// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
+		// runtimeOnly 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3'
+	// https://mvnrepository.com/artifact/com.rometools/rome
+		// implementation 'com.rometools:rome:1.18.0'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		// compileOnly 'org.projectlombok:lombok'
+		// annotationProcessor 'org.projectlombok:lombok'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+		implementation "org.springframework.boot:spring-boot-starter-data-redis"
 
-
-
-
-graalvmNative {
-
-        binaries {
-//            all {
-//                resources.autodetect()
-//            }
-             main {
-                 imageName.set('flycat-price')
-//                buildArgs.add('--verbose')
-//                buildArgs.add('--add-opens=java.base/java.nio=ALL-UNNAMED')
-//                buildArgs.add('--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED')
-//                buildArgs.add('--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED')
-
-//                buildArgs.add('--trace-class-initialization=org.slf4j.LoggerFactory')
+		compileOnly 'org.projectlombok:lombok:1.18.24'
+		annotationProcessor 'org.projectlombok:lombok:1.18.24'
+		testCompileOnly 'org.projectlombok:lombok:1.18.24'
+		testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+	}
 
 
-//                buildArgs.add('--trace-class-initialization=ch.qos.logback.classic.Logger')
-//                buildArgs.add('--trace-object-instantiation=ch.qos.logback.core.AsyncAppenderBase$Worker')
-//                buildArgs.add('--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback')
-                  // buildArgs.add('--initialize-at-run-time=io.netty')
-
-//                buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory")
-//                buildArgs.add("--initialize-at-build-time=org.slf4j.simple.SimpleLogger")
-//                buildArgs.add("--initialize-at-build-time=org.slf4j.impl.StaticLoggerBinder")
-//                buildArgs.add("--initialize-at-run-time=io.netty.util.internal.logging.Log4JLogger")
-//                buildArgs.add("--initialize-at-run-time=io.netty.util.AbstractReferenceCounted")
-//                buildArgs.add("--initialize-at-run-time=io.netty.channel.epoll")
-//                buildArgs.add("--initialize-at-run-time=io.netty.handler.ssl")
-//                buildArgs.add("--initialize-at-run-time=io.netty.channel.unix")
-
-//                mainClass = 'com.github.zgqq.flycatprice.AppApplication'
-             }
-         }
- }
 
 
-tasks.named('bootBuildImage') {
-	buildpacks =  ['gcr.io/paketo-buildpacks/bellsoft-liberica:9.9.0-ea', 'gcr.io/paketo-buildpacks/java-native-image']
-}
+	graalvmNative {
+
+		binaries {
+	//            all {
+	//                resources.autodetect()
+	//            }
+		     main {
+			 imageName.set('flycat-price')
+	//                buildArgs.add('--verbose')
+	//                buildArgs.add('--add-opens=java.base/java.nio=ALL-UNNAMED')
+	//                buildArgs.add('--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED')
+	//                buildArgs.add('--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED')
+
+	//                buildArgs.add('--trace-class-initialization=org.slf4j.LoggerFactory')
 
 
-tasks.named('test') {
-	useJUnitPlatform()
+	//                buildArgs.add('--trace-class-initialization=ch.qos.logback.classic.Logger')
+	//                buildArgs.add('--trace-object-instantiation=ch.qos.logback.core.AsyncAppenderBase$Worker')
+	//                buildArgs.add('--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback')
+			  // buildArgs.add('--initialize-at-run-time=io.netty')
+
+	//                buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory")
+	//                buildArgs.add("--initialize-at-build-time=org.slf4j.simple.SimpleLogger")
+	//                buildArgs.add("--initialize-at-build-time=org.slf4j.impl.StaticLoggerBinder")
+	//                buildArgs.add("--initialize-at-run-time=io.netty.util.internal.logging.Log4JLogger")
+	//                buildArgs.add("--initialize-at-run-time=io.netty.util.AbstractReferenceCounted")
+	//                buildArgs.add("--initialize-at-run-time=io.netty.channel.epoll")
+	//                buildArgs.add("--initialize-at-run-time=io.netty.handler.ssl")
+	//                buildArgs.add("--initialize-at-run-time=io.netty.channel.unix")
+
+	//                mainClass = 'com.github.zgqq.flycatprice.AppApplication'
+		     }
+		 }
+	 }
+
+
+	tasks.named('bootBuildImage') {
+		buildpacks =  ['gcr.io/paketo-buildpacks/bellsoft-liberica:9.9.0-ea', 'gcr.io/paketo-buildpacks/java-native-image']
+	}
+
+
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
+
+
+	tasks.named("processAot") {
+		setArgs(["spring"])
+	}
 }
